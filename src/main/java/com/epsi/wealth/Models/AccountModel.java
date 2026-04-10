@@ -1,6 +1,9 @@
 package com.epsi.wealth.Models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +35,7 @@ public class AccountModel {
 
     private AccountType type;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private UserModel user;
