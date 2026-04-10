@@ -12,6 +12,6 @@ public interface AccountRepository extends JpaRepository<AccountModel, Long> {
     Double sumSoldeByUser(@Param("userId") Long userId);
 
     // Bénéfice annuel projeté (comptes EPARGNE uniquement)
-    @Query("SELECT COALESCE(SUM(a.soldeActuel * a.tauxInteret / 100), 0) FROM AccountModel a WHERE a.user.id = :userId AND a.type = 'EPARGNE'")
+    @Query("SELECT COALESCE(SUM(a.soldeActuel * a.tauxInteret / 100), 0) FROM AccountModel a WHERE a.user.id = :userId AND a.type = com.epsi.wealth.Models.AccountType.EPARGNE")
     Double beneficeAnnuelProjetee(@Param("userId") Long userId);
 }
