@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.epsi.wealth.Models.AccountModel;
 import com.epsi.wealth.Models.TransactionModel;
 import com.epsi.wealth.Models.TransactionType;
+import com.epsi.wealth.Repositories.AccountRepository;
 import com.epsi.wealth.Repositories.TransactionRepository;
 import jakarta.transaction.Transactional;
 
