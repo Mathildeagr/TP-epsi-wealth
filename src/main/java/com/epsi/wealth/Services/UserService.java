@@ -1,6 +1,7 @@
 package com.epsi.wealth.Services;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.stereotype.Service;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
@@ -63,4 +64,36 @@ public class UserService {
 
     return new DashboardDTO(soldeTotal, revenus, depenses, revenus - depenses, benefice);
 }
+
+    // DTO pour le matelas de sécurité
+    public record SafetyBufferDTO(Long userId, int moisAnalyses, String methodologie, Double matelas) {}
+
+    public SafetyBufferDTO getSafetyBuffer(Long userId) {
+        UserModel user = getUserById(userId);
+        LocalDate today = LocalDate.now();
+        LocalDate inscription = user.getDateInscription();
+
+        // Calcul du nombre de mois entre l'inscription et aujourd'hui, minimum 1 pour éviter la division par zéro
+        long nbMois = Math.max(ChronoUnit.MONTHS.between(inscription.withDayOfMonth(1), today.withDayOfMonth(1)), 1);
+
+        double matelas;
+        int moisAnalyses;
+        String methodologie;
+
+        // Si l'utilisateur est inscrit depuis plus d'un an, on prend les 12 derniers mois réels
+        if (nbMois >= 12) {
+            moisAnalyses = 12;
+            double total = transactionRepository.sumDepensesDepuis(userId, today.minusMonths(12));
+            matelas = total;
+            methodologie = "Basé sur les 12 derniers mois réels";
+        // Sinon, on projette sur 12 mois en utilisant la moyenne mensuelle des dépenses depuis l'inscription
+        } else {
+            moisAnalyses = (int) nbMois;
+            double total = transactionRepository.sumDepensesDepuis(userId, inscription);
+            matelas = (total / moisAnalyses) * 12;
+            methodologie = "Projection sur 12 mois (historique insuffisant)";
+        }
+
+        return new SafetyBufferDTO(userId, moisAnalyses, methodologie, matelas);
+    }
 }
