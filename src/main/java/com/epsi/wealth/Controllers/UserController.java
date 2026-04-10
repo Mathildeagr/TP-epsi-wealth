@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Services.UserService;
+import com.epsi.wealth.Services.UserService.DashboardDTO;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,5 +29,11 @@ public class UserController {
     @GetMapping("/{id}")
     public UserModel getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    // DTO pour le dashboard
+    @GetMapping("/{id}/dashboard")
+    public ResponseEntity<DashboardDTO> getDashboard(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getDashboard(id));
     }
 }
