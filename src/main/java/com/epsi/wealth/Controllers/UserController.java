@@ -24,4 +24,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
+    @GetMapping("/{id}")
+    public UserModel getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 }

@@ -1,6 +1,8 @@
 package com.epsi.wealth.Services;
 
 import java.time.LocalDate;
+
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
 import com.epsi.wealth.Models.UserModel;
@@ -26,5 +28,9 @@ public class UserService {
 
         user.setDateInscription(LocalDate.now());
         return userRepository.save(user);
+    }
+
+    public UserModel getUserById (Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non rencontré")); 
     }
 }
