@@ -39,7 +39,7 @@ public class TransactionController {
             Double somme = transactionRepository.sumDepensesMois(
                 saved.getCategory().getId(), now.getMonthValue(), now.getYear());
             // Récupérer le plafond de la catégorie
-            double plafond = saved.getCategory().getPlafondMensuel();
+            Double plafond = saved.getCategory().getPlafondMensuel();
             if (somme > plafond) {
                 warning = String.format(
                     "Plafond dépassé pour la catégorie '%s'. Budget mensuel : %.2f€, Total après opération : %.2f€.",

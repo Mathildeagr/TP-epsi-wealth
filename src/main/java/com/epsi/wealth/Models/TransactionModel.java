@@ -2,6 +2,9 @@ package com.epsi.wealth.Models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,10 +31,12 @@ public class TransactionModel {
 
     private TransactionType type;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private AccountModel account;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CategoryModel category;
