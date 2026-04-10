@@ -42,7 +42,7 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
 
     // Somme des DEPENSES d'un utilisateur depuis une date donnée
     @Query("SELECT COALESCE(SUM(t.montant), 0) FROM TransactionModel t " +
-           "WHERE t.account.user.id = :userId AND t.type = 'DEPENSE' AND t.date >= :fromDate")
-    Double sumDepensesDepuis(@Param("userId") Long userId, @Param("fromDate") LocalDate fromDate);
+           "WHERE t.account.user.id = :userId AND t.type = :type AND t.date >= :fromDate")
+    Double sumDepensesDepuis(@Param("userId") Long userId, @Param("type") TransactionType type, @Param("fromDate") LocalDate fromDate);
 
 }

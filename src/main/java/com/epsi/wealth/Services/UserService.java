@@ -83,13 +83,13 @@ public class UserService {
         // Si l'utilisateur est inscrit depuis plus d'un an, on prend les 12 derniers mois réels
         if (nbMois >= 12) {
             moisAnalyses = 12;
-            double total = transactionRepository.sumDepensesDepuis(userId, today.minusMonths(12));
+            double total = transactionRepository.sumDepensesDepuis(userId, TransactionType.DEPENSE, today.minusMonths(12));
             matelas = total;
             methodologie = "Basé sur les 12 derniers mois réels";
         // Sinon, on projette sur 12 mois en utilisant la moyenne mensuelle des dépenses depuis l'inscription
         } else {
             moisAnalyses = (int) nbMois;
-            double total = transactionRepository.sumDepensesDepuis(userId, inscription);
+            double total = transactionRepository.sumDepensesDepuis(userId, TransactionType.DEPENSE, inscription);
             matelas = (total / moisAnalyses) * 12;
             methodologie = "Projection sur 12 mois (historique insuffisant)";
         }
