@@ -7,6 +7,7 @@ import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Services.UserService;
 import com.epsi.wealth.Services.UserService.DashboardDTO;
+import com.epsi.wealth.Services.UserService.SafetyBufferDTO;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,5 +36,10 @@ public class UserController {
     @GetMapping("/{id}/dashboard")
     public ResponseEntity<DashboardDTO> getDashboard(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getDashboard(id));
+    }
+
+    @GetMapping("/{id}/safety-buffer")
+    public ResponseEntity<SafetyBufferDTO> getSafetyBuffer(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getSafetyBuffer(id));
     }
 }
