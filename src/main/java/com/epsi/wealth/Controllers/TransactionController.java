@@ -37,7 +37,7 @@ public class TransactionController {
             LocalDate now = LocalDate.now();
             // Calculer la somme des dépenses pour la catégorie ce mois-ci
             Double somme = transactionRepository.sumDepensesMois(
-                saved.getCategory().getId(), now.getMonthValue(), now.getYear());
+                saved.getCategory().getId(), TransactionType.DEPENSE, now.getMonthValue(), now.getYear());
             // Récupérer le plafond de la catégorie
             Double plafond = saved.getCategory().getPlafondMensuel();
             if (somme > plafond) {
