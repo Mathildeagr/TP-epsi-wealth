@@ -6,6 +6,7 @@ import com.epsi.wealth.Models.AccountModel;
 import com.epsi.wealth.Models.TransactionModel;
 import com.epsi.wealth.Models.TransactionType;
 import com.epsi.wealth.Repositories.AccountRepository;
+import com.epsi.wealth.Repositories.CategoryRepository;
 import com.epsi.wealth.Repositories.TransactionRepository;
 import jakarta.transaction.Transactional;
 
@@ -18,17 +19,26 @@ public class TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
-    // Transactional pour garantir que les opérations sur la base de données sont atomiques
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Transactional
     public TransactionModel create(TransactionModel transaction) {
-    AccountModel account = transaction.getAccount();
-    if (transaction.getType() == TransactionType.REVENU) {
-        account.setSoldeActuel(account.getSoldeActuel() + transaction.getMontant());
-    } else {
-        account.setSoldeActuel(account.getSoldeActuel() - transaction.getMontant());
+        AccountModel account = accountRepository.findById(transaction.getAccount().getId())
+                .orElseThrow(() -> new RuntimeException("Compte introuvable"));
+
+        com.epsi.wealth.Models.CategoryModel category = categoryRepository.findById(transaction.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Catégorie introuvable"));
+
+        if (transaction.getType() == TransactionType.REVENU) {
+            account.setSoldeActuel(account.getSoldeActuel() + transaction.getMontant());
+        } else {
+            account.setSoldeActuel(account.getSoldeActuel() - transaction.getMontant());
+        }
+        accountRepository.save(account);
+        transaction.setAccount(account);
+        transaction.setCategory(category);
+        return transactionRepository.save(transaction);
     }
-    accountRepository.save(account);
-    return transactionRepository.save(transaction);
-}
 
 }

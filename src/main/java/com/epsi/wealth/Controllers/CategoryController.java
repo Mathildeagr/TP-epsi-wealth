@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import com.epsi.wealth.Models.CategoryModel;
 import com.epsi.wealth.Services.CategoryService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -16,7 +18,7 @@ public class CategoryController {
 
 
     @PostMapping
-    public CategoryModel createCategory(@RequestBody CategoryModel category, @RequestParam Long userId) {
+    public CategoryModel createCategory(@Valid @RequestBody CategoryModel category, @RequestParam Long userId) {
         return categoryService.createCategory(category, userId);
     }
 }
