@@ -8,6 +8,7 @@ import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Services.UserService;
 import com.epsi.wealth.Services.UserService.DashboardDTO;
 import com.epsi.wealth.Services.UserService.SafetyBufferDTO;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserModel user) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserModel user) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
         } catch (EmailAlreadyExistsException e) {

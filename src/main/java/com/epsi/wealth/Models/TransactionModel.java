@@ -12,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @Entity
@@ -24,13 +27,17 @@ public class TransactionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String libelle;
 
     @Column(nullable = false)
+    @Positive
     private Double montant;
 
+    @NotNull
     private LocalDate date;
 
+    @NotNull
     private TransactionType type;
 
     @JsonIgnore

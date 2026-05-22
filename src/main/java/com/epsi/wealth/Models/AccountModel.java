@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 
 @Data
@@ -26,11 +28,13 @@ public class AccountModel {
     private Long id;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Le nom du compte est obligatoire")
     private String nom;
 
     @Column(nullable = false)
     private Double soldeActuel;
 
+    @DecimalMin(value = "0.0", inclusive = true, message = "Le taux d'intérêt doit être supérieur ou égal à 0")
     private Double tauxInteret;
 
     private AccountType type;

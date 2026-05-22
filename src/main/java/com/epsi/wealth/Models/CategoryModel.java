@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @Data
@@ -29,6 +30,7 @@ public class CategoryModel {
     private String nom;
 
     @Column(nullable = false)
+    @Positive(message = "Le plafond mensuel doit être strictement positif")
     private Double plafondMensuel;
 
     @JsonIgnore

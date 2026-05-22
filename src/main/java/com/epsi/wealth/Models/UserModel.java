@@ -1,4 +1,6 @@
 package com.epsi.wealth.Models;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
@@ -21,18 +23,19 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Nom et prénom ne sont doivent pas être null
+    @NotEmpty(message = "Le nom est obligatoire")
     @Column(nullable = false)
     private String nom;
 
+    @NotEmpty(message = "Le prénom est obligatoire")
     @Column(nullable = false)
     private String prenom;
 
-    // email doit être unique et ne peut pas être null
+    @NotEmpty(message = "L'email est obligatoire")
+    @Email(message = "L'email n'est pas valide")
     @Column(unique = true, nullable = false) 
     private String email;
 
-    // date Inscription par défaut à la date actuelle
     private LocalDate dateInscription = LocalDate.now();
 
 
