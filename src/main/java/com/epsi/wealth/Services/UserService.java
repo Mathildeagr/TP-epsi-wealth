@@ -2,9 +2,11 @@ package com.epsi.wealth.Services;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
+import com.epsi.wealth.Models.AccountModel;
 import com.epsi.wealth.Models.TransactionType;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Repositories.AccountRepository;
@@ -95,5 +97,38 @@ public class UserService {
         }
 
         return new SafetyBufferDTO(userId, moisAnalyses, methodologie, matelas);
+    }
+
+    public record Advisor(String statut, Float soldeTotal, Float matelasRequis, Float surplus, String message, List<AccountModel> accounts ) {
+}
+    public Advisor getAdvisor (Long userId) {
+        UserModel user = getUserById(userId);
+        SafetyBufferDTO safetyBuffer = getSafetyBuffer(userId);
+        double matelas = safetyBuffer.matelas;
+        double soldeTotal = getDashboard(userId).soldeTotal;
+        List<AccountModel> accounts = accountRepository.findSavingAccountByUserId(user.getId());
+
+
+        //Matelas incomplet
+        if (soldeTotal <= matelas) {
+            return new Advisor(
+                "MATELAS_INCOMPLET", 
+                (float) soldeTotal, 
+                (float) matelas, 
+                (float) (soldeTotal - matelas), 
+                "\"Priorité : constituez votre matelas. Il vous manque 5 900,00€.\"", 
+                accounts
+            );  
+        } else {
+            return new Advisor(
+                "MATELAS_OK", 
+                (float) soldeTotal, 
+                (float) matelas, 
+                (float) (soldeTotal - matelas),
+                null, 
+                accounts
+            );
+        }
+        
     }
 }
