@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @Entity
+@Table(name = "transaction")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,7 +37,8 @@ public class TransactionModel {
     private Double montant;
 
     @NotNull
-    private LocalDate date;
+    
+    private LocalDate transactionDate;
 
     @NotNull
     private TransactionType type;

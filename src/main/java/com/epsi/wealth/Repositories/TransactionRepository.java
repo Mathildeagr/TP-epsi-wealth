@@ -20,7 +20,7 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
         // COALESCE pour retourner 0 au lieu de null si aucune dépense n'est trouvée
         "SELECT COALESCE(SUM(t.montant), 0) FROM TransactionModel t " +
        "WHERE t.category.id = :categoryId AND t.type = :type " +
-       "AND MONTH(t.date) = :month AND YEAR(t.date) = :year"
+       "AND MONTH(t.transactionDate) = :month AND YEAR(t.transactionDate) = :year"
     )
     Double sumDepensesMois(
         @Param("categoryId") Long categoryId,
@@ -33,7 +33,7 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
     @Query(
         "SELECT COALESCE(SUM(t.montant), 0) FROM TransactionModel t " +
         "WHERE t.account.user.id = :userId AND t.type = :type " +
-        "AND MONTH(t.date) = :month AND YEAR(t.date) = :year"
+        "AND MONTH(t.transactionDate) = :month AND YEAR(t.transactionDate) = :year"
     )
     Double sumParTypeMois(
         @Param("userId") Long userId, @Param("type") TransactionType type,
@@ -42,7 +42,7 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
 
     // Somme des DEPENSES d'un utilisateur depuis une date donnée
     @Query("SELECT COALESCE(SUM(t.montant), 0) FROM TransactionModel t " +
-           "WHERE t.account.user.id = :userId AND t.type = :type AND t.date >= :fromDate")
+           "WHERE t.account.user.id = :userId AND t.type = :type AND t.transactionDate >= :fromDate")
     Double sumDepensesDepuis(@Param("userId") Long userId, @Param("type") TransactionType type, @Param("fromDate") LocalDate fromDate);
 
 }

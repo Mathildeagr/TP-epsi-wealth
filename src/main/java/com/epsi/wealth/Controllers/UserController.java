@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Services.UserService;
+import com.epsi.wealth.Services.UserService.Advisor;
 import com.epsi.wealth.Services.UserService.DashboardDTO;
 import com.epsi.wealth.Services.UserService.SafetyBufferDTO;
 import jakarta.validation.Valid;
@@ -42,5 +43,10 @@ public class UserController {
     @GetMapping("/{id}/safety-buffer")
     public ResponseEntity<SafetyBufferDTO> getSafetyBuffer(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getSafetyBuffer(id));
+    }
+
+    @GetMapping("/{id}/advisor")
+    public ResponseEntity<Advisor> getAdvisor(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getAdvisor(id));
     }
 }
