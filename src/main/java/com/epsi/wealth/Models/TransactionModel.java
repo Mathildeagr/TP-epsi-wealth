@@ -3,7 +3,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -43,12 +42,10 @@ public class TransactionModel {
     @NotNull
     private TransactionType type;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private AccountModel account;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CategoryModel category;

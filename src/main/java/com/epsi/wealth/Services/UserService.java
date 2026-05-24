@@ -116,7 +116,7 @@ public class UserService {
                 (float) soldeTotal, 
                 (float) matelas, 
                 (float) (soldeTotal - matelas), 
-                "\"Priorité : constituez votre matelas. Il vous manque 5 900,00€.\"", 
+                String.format("Priorité : constituez votre matelas. Il vous manque %.2f€.", matelas - soldeTotal),
                 accounts
             );  
         } else {

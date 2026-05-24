@@ -26,4 +26,13 @@ public class GlobalExceptionHandler {
                 "erreurs", erreurs
         );
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, Object> handleNotFound(RuntimeException ex) {
+        return Map.of(
+                "status", 404,
+                "message", ex.getMessage()
+        );
+    }
 }
