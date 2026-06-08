@@ -1,6 +1,7 @@
 package com.epsi.wealth.Repositories;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -44,5 +45,19 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
     @Query("SELECT COALESCE(SUM(t.montant), 0) FROM TransactionModel t " +
            "WHERE t.account.user.id = :userId AND t.type = :type AND t.transactionDate >= :fromDate")
     Double sumDepensesDepuis(@Param("userId") Long userId, @Param("type") TransactionType type, @Param("fromDate") LocalDate fromDate);
+
+    // Transactions d'un utilisateur filtrées par mois et/ou année (JPQL, tri date décroissante)
+    @Query("SELECT t FROM TransactionModel t WHERE t.account.user.id = :userId " +
+           "AND (:mois IS NULL OR MONTH(t.date) = :mois) " +
+           "AND (:annee IS NULL OR YEAR(t.date) = :annee) " +
+           "ORDER BY t.date DESC")
+    List<TransactionModel> findByUserFiltered(
+        @Param("userId") Long userId,
+        @Param("mois") Integer mois,
+        @Param("annee") Integer annee
+    );
+
+    // Toutes les transactions d'un compte donné
+    List<TransactionModel> findByAccountId(Long accountId);
 
 }

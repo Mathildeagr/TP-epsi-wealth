@@ -5,7 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
+import com.epsi.wealth.Models.TransactionModel;
 import com.epsi.wealth.Models.AccountModel;
 import com.epsi.wealth.Models.TransactionType;
 import com.epsi.wealth.Models.UserModel;
@@ -45,6 +47,23 @@ public class UserService {
     // Récupération d'un utilisateur par son ID avec gestion de l'absence d'utilisateur
     public UserModel getUserById (Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non rencontré")); 
+    }
+
+    public List<UserModel> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Utilisateur non trouvé");
+        }
+        userRepository.deleteById(id);
+    }
+
+    public List<TransactionModel> getTransactionsByUser(Long userId, Integer mois, Integer annee) {
+        getUserById(userId);
+        return transactionRepository.findByUserFiltered(userId, mois, annee);
     }
 
     // DTO pour le dashboard

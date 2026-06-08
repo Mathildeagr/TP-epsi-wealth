@@ -28,18 +28,17 @@ public class TransactionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "Le libellé ne peut pas être vide")
     private String libelle;
 
     @Column(nullable = false)
-    @Positive
+    @Positive(message = "Le montant doit être strictement positif")
     private Double montant;
 
-    @NotNull
-    
+    @NotNull(message = "La date ne peut pas être nulle")
     private LocalDate transactionDate;
 
-    @NotNull
+    @NotNull(message = "Le type de transaction ne peut pas être nul")
     private TransactionType type;
 
     @ManyToOne(optional = false)
