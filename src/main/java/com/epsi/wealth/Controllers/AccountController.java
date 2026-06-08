@@ -45,6 +45,9 @@ public class AccountController {
     public List<TransactionModel> getTransactions(@PathVariable Long id) {
         return transactionService.getByAccountId(id);
     }
+    
+    @GetMapping("/{id}/projection")
+    public AccountService.ProjectionDTO getProjection(@PathVariable Long id, @RequestParam int annees) {
+        return accountService.getProjection(id, annees);
+    }
 }
-
-

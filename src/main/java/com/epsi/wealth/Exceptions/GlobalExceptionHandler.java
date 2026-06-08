@@ -34,6 +34,12 @@ public class GlobalExceptionHandler {
         return Map.of("status", 400, "erreurs", List.of("Le paramètre '" + ex.getParameterName() + "' est obligatoire"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleBadRequest(IllegalArgumentException ex) {
+        return Map.of("status", 400, "erreurs", List.of(ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, Object> handleNotFound(RuntimeException ex) {
