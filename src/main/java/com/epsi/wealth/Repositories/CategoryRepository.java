@@ -30,4 +30,5 @@ public interface CategoryRepository extends JpaRepository<CategoryModel, Long> {
         @Param("annee") int annee
     );
 
+    List<CategoryModel> findByUserId(Long userId);
 }

@@ -32,12 +32,16 @@ public class TransactionController {
 
     @GetMapping
     public List<TransactionModel> getAll() {
-        return transactionService.getAll();
+        return transactionService.getAllByUser(getCurrentUserId());
     }
 
     @GetMapping("/{id}")
     public TransactionModel getById(@PathVariable Long id) {
-        return transactionService.getById(id);
+        TransactionModel transaction = transactionService.getById(id);
+        if (!transaction.getAccount().getUser().getId().equals(getCurrentUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès refusé");
+        }
+        return transaction;
     }
 
     @DeleteMapping("/{id}")

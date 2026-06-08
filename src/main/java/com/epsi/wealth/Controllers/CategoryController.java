@@ -26,12 +26,16 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryModel> getAll() {
-        return categoryService.getAll();
+        return categoryService.getAllByUser(getCurrentUserId());
     }
 
     @GetMapping("/{id}")
     public CategoryModel getById(@PathVariable Long id) {
-        return categoryService.getById(id);
+        CategoryModel category = categoryService.getById(id);
+        if (!category.getUser().getId().equals(getCurrentUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès refusé");
+        }
+        return category;
     }
 
     @PostMapping

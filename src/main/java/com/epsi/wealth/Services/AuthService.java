@@ -3,10 +3,12 @@ package com.epsi.wealth.Services;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -39,7 +41,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Email ou mot de passe incorrect");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou mot de passe incorrect");
         }
 
         UserModel user = userService.getUserByEmail(request.email());

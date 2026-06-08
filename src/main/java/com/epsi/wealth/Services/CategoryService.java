@@ -22,6 +22,10 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public List<CategoryModel> getAllByUser(Long userId) {
+        return categoryRepository.findByUserId(userId);
+    }
+
     public CategoryModel getById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
     }

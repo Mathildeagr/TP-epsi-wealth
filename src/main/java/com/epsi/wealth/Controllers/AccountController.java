@@ -30,12 +30,16 @@ public class AccountController {
 
     @GetMapping
     public List<AccountModel> getAll() {
-        return accountService.getAll();
+        return accountService.getAllByUser(getCurrentUserId());
     }
 
     @GetMapping("/{id}")
     public AccountModel getById(@PathVariable Long id) {
-        return accountService.getById(id);
+        AccountModel account = accountService.getById(id);
+        if (!account.getUser().getId().equals(getCurrentUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès refusé");
+        }
+        return account;
     }
 
     @PostMapping
@@ -57,11 +61,19 @@ public class AccountController {
 
     @GetMapping("/{id}/transactions")
     public List<TransactionModel> getTransactions(@PathVariable Long id) {
+        AccountModel account = accountService.getById(id);
+        if (!account.getUser().getId().equals(getCurrentUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès refusé");
+        }
         return transactionService.getByAccountId(id);
     }
     
     @GetMapping("/{id}/projection")
     public AccountService.ProjectionDTO getProjection(@PathVariable Long id, @RequestParam int annees) {
+        AccountModel account = accountService.getById(id);
+        if (!account.getUser().getId().equals(getCurrentUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Accès refusé");
+        }
         return accountService.getProjection(id, annees);
     }
 }

@@ -20,5 +20,7 @@ public interface AccountRepository extends JpaRepository<AccountModel, Long> {
     @Query("SELECT a FROM AccountModel a WHERE a.user.id = :userId AND a.type = com.epsi.wealth.Models.AccountType.EPARGNE AND a.tauxInteret < 1.5")
     List<AccountModel> findSavingAccountByUserId(@Param("userId") Long userId);
 
+    List<AccountModel> findByUserId(Long userId);
+
 }
 

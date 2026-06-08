@@ -34,6 +34,10 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    public List<TransactionModel> getAllByUser(Long userId) {
+        return transactionRepository.findByUserFiltered(userId, null, null);
+    }
+
     public TransactionModel getById(Long id) {
         return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction non trouvée"));
     }

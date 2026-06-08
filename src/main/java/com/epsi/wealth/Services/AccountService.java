@@ -25,6 +25,10 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
+    public List<AccountModel> getAllByUser(Long userId) {
+        return accountRepository.findByUserId(userId);
+    }
+
     public AccountModel getById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Compte non trouvé"));
     }

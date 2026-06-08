@@ -33,7 +33,10 @@ public class UserController {
 
     @GetMapping
     public List<UserModel> getAll() {
-        return userService.getAll();
+        Long currentUserId = Long.parseLong(
+            SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return List.of(userService.getUserById(currentUserId));
     }
 
     @GetMapping("/{id}")
@@ -78,16 +81,19 @@ public class UserController {
 
     @GetMapping("/{id}/categories/top-depenses")
     public ResponseEntity<List<UserService.TopSpendingByCategory>> getTopSpendingByCategory(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        checkOwnership(id);
         return ResponseEntity.ok(userService.getTopSpendingByCategory(id, mois, annee));
     }
 
     @GetMapping("/{id}/savings-rate")
     public ResponseEntity<UserService.SavingsRateDTO> getSavingsRate(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        checkOwnership(id);
         return ResponseEntity.ok(userService.getSavingsRate(id, mois, annee));
     }
 
     @GetMapping("/{id}/bilan-comparatif")
     public ResponseEntity<UserService.BilanComparatifDTO> getBilanComparatif(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        checkOwnership(id);
         return ResponseEntity.ok(userService.getBilanComparatif(id, mois, annee));
     }
 }

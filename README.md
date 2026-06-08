@@ -63,13 +63,16 @@ Authorization: Bearer <token>
 ```
 - Sans token → `401 Unauthorized`
 - Avec un token valide mais accès aux données d'un autre utilisateur → `403 Forbidden`
+- Identifiants incorrects au login → `401 Unauthorized`
+
+Chaque utilisateur ne peut accéder et modifier **que ses propres données** (comptes, catégories, transactions).
 
 ---
 
 ## Utilisateurs — `/api/users`
 
 ### GET `/api/users`
-Liste tous les utilisateurs.
+Retourne uniquement le profil de l'utilisateur connecté.
 ```
 GET http://localhost:8080/api/users
 Authorization: Bearer <token>
@@ -117,15 +120,40 @@ GET http://localhost:8080/api/users/1/advisor
 Authorization: Bearer <token>
 ```
 
+### GET `/api/users/{id}/categories/top-depenses?mois=6&annee=2026`
+Top 3 des catégories avec le plus de dépenses pour un mois donné (propriétaire uniquement).
+```
+GET http://localhost:8080/api/users/1/categories/top-depenses?mois=6&annee=2026
+Authorization: Bearer <token>
+```
+
+### GET `/api/users/{id}/savings-rate?mois=6&annee=2026`
+Taux d'épargne du mois : revenus, dépenses, épargne nette et appréciation (propriétaire uniquement).
+```
+GET http://localhost:8080/api/users/1/savings-rate?mois=6&annee=2026
+Authorization: Bearer <token>
+```
+
+### GET `/api/users/{id}/bilan-comparatif?mois=6&annee=2026`
+Comparaison mois courant vs mois précédent : évolution des revenus et dépenses (propriétaire uniquement).
+```
+GET http://localhost:8080/api/users/1/bilan-comparatif?mois=6&annee=2026
+Authorization: Bearer <token>
+```
+
 ---
 
 ## Comptes — `/api/accounts`
 
 ### GET `/api/accounts`
-Liste tous les comptes.
+Liste les comptes de l'utilisateur connecté uniquement.
+```
+GET http://localhost:8080/api/accounts
+Authorization: Bearer <token>
+```
 
 ### GET `/api/accounts/{id}`
-Récupère un compte par son ID.
+Récupère un compte par son ID (propriétaire uniquement).
 
 ### POST `/api/accounts?userId={id}`
 Crée un compte pour un utilisateur. `type` : `COURANT` ou `EPARGNE`.
@@ -158,9 +186,16 @@ Authorization: Bearer <token>
 ```
 
 ### GET `/api/accounts/{id}/transactions`
-Liste les transactions d'un compte.
+Liste les transactions d'un compte (propriétaire uniquement).
 ```
 GET http://localhost:8080/api/accounts/1/transactions
+Authorization: Bearer <token>
+```
+
+### GET `/api/accounts/{id}/projection?annees=10`
+Projection du capital d'un compte EPARGNE sur N années avec intérêts composés (propriétaire uniquement).
+```
+GET http://localhost:8080/api/accounts/1/projection?annees=10
 Authorization: Bearer <token>
 ```
 
@@ -169,10 +204,14 @@ Authorization: Bearer <token>
 ## Catégories — `/api/categories`
 
 ### GET `/api/categories`
-Liste toutes les catégories.
+Liste les catégories de l'utilisateur connecté uniquement.
+```
+GET http://localhost:8080/api/categories
+Authorization: Bearer <token>
+```
 
 ### GET `/api/categories/{id}`
-Récupère une catégorie par son ID.
+Récupère une catégorie par son ID (propriétaire uniquement).
 
 ### POST `/api/categories?userId={id}`
 Crée une catégorie pour un utilisateur.
@@ -205,10 +244,14 @@ Authorization: Bearer <token>
 ## Transactions — `/api/transactions`
 
 ### GET `/api/transactions`
-Liste toutes les transactions.
+Liste les transactions de l'utilisateur connecté uniquement.
+```
+GET http://localhost:8080/api/transactions
+Authorization: Bearer <token>
+```
 
 ### GET `/api/transactions/{id}`
-Récupère une transaction par son ID.
+Récupère une transaction par son ID (propriétaire uniquement).
 
 ### POST `/api/transactions?accountId={id}&categoryId={id}`
 Crée une transaction. `type` : `REVENU` ou `DEPENSE`.  
