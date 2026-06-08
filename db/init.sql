@@ -11,6 +11,7 @@ CREATE TABLE user (
     nom VARCHAR(255) NOT NULL,
     prenom VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     date_inscription DATE NOT NULL DEFAULT (CURRENT_DATE)
 );
 
@@ -60,17 +61,24 @@ CREATE TABLE transaction (
 
 -- -------------------------------------------------------------
 -- Utilisateurs
+--   Mot de passe commun (démo) : Password1!
 --   1. Marie Dupont   — inscrite Jan 2024  → 16 mois d'historique → MATELAS_OK
 --   2. Thomas Martin  — inscrit Oct 2025   →  7 mois d'historique → MATELAS_INCOMPLET
 --   3. Sophie Leclerc — inscrite Avr 2026  →  1 mois d'historique → MATELAS_INCOMPLET
 -- -------------------------------------------------------------
-INSERT INTO user (id, nom, prenom, email, date_inscription) VALUES
-(1, 'Dupont',  'Marie',   'marie.dupont@email.com',   '2024-01-15'),
-(2, 'Martin',  'Thomas',  'thomas.martin@email.com',  '2025-10-01'),
-(3, 'Leclerc', 'Sophie',  'sophie.leclerc@email.com', '2026-04-01'),
+-- -------------------------------------------------------------
+-- Utilisateurs
+-- Mot de passe de tous les comptes de démo : Password1!
+-- Hash BCrypt (cost 10) de "Password1!" :
+--   $2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W
+-- -------------------------------------------------------------
+INSERT INTO user (id, nom, prenom, email, password, date_inscription) VALUES
+(1, 'Dupont',  'Marie',   'marie.dupont@email.com',   '$2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W', '2024-01-15'),
+(2, 'Martin',  'Thomas',  'thomas.martin@email.com',  '$2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W', '2025-10-01'),
+(3, 'Leclerc', 'Sophie',  'sophie.leclerc@email.com', '$2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W', '2026-04-01'),
 -- taux épargne < 1.5 %
-(4, 'Bernard', 'Lucas',   'lucas.bernard@email.com',  '2024-06-01'),
-(5, 'Morel',   'Camille', 'camille.morel@email.com',  '2025-03-15');
+(4, 'Bernard', 'Lucas',   'lucas.bernard@email.com',  '$2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W', '2024-06-01'),
+(5, 'Morel',   'Camille', 'camille.morel@email.com',  '$2a$10$7EqJtq98hPqEX7fNZaFWoO9G7RXVMKyvUiyl.ZMUAPe38rBKIAC0W', '2025-03-15');
 
 -- -------------------------------------------------------------
 -- Comptes

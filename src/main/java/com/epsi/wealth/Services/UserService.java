@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.epsi.wealth.Exceptions.EmailAlreadyExistsException;
@@ -24,12 +25,14 @@ public class UserService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+    public UserService(UserRepository userRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Création d'un utilisateur avec validation de l'email et gestion des doublons
@@ -44,12 +47,17 @@ public class UserService {
         }
 
         user.setDateInscription(LocalDate.now());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     // Récupération d'un utilisateur par son ID avec gestion de l'absence d'utilisateur
     public UserModel getUserById (Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non rencontré")); 
+    }
+
+    public UserModel getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
     public List<UserModel> getAll() {
