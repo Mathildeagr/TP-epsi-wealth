@@ -1,6 +1,5 @@
 package com.epsi.wealth.Controllers;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.epsi.wealth.Models.AccountModel;

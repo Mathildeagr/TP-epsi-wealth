@@ -48,9 +48,9 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, L
 
     // Transactions d'un utilisateur filtrées par mois et/ou année (JPQL, tri date décroissante)
     @Query("SELECT t FROM TransactionModel t WHERE t.account.user.id = :userId " +
-           "AND (:mois IS NULL OR MONTH(t.date) = :mois) " +
-           "AND (:annee IS NULL OR YEAR(t.date) = :annee) " +
-           "ORDER BY t.date DESC")
+           "AND (:mois IS NULL OR MONTH(t.transactionDate) = :mois) " +
+           "AND (:annee IS NULL OR YEAR(t.transactionDate) = :annee) " +
+           "ORDER BY t.transactionDate DESC")
     List<TransactionModel> findByUserFiltered(
         @Param("userId") Long userId,
         @Param("mois") Integer mois,
