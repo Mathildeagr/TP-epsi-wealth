@@ -169,4 +169,42 @@ public class UserService {
        }
        return topSpendingByCategoryList;
     }
+
+    public record SavingsRateDTO(
+        int mois,
+        int annee,
+        double totalRevenus,
+        double totalDepenses,
+        double epargneNette,
+        String tauxEpargne,
+        String appreciation
+    ) {}
+
+    public SavingsRateDTO getSavingsRate(Long userId, int mois, int annee) {
+        getUserById(userId);
+
+        double totalRevenus  = transactionRepository.sumParTypeMois(userId, TransactionType.REVENU,  mois, annee);
+        double totalDepenses = transactionRepository.sumParTypeMois(userId, TransactionType.DEPENSE, mois, annee);
+
+        if (totalRevenus == 0) {
+            throw new RuntimeException("Aucun revenu enregistré pour ce mois : calcul du taux d'épargne impossible.");
+        }
+
+        double epargneNette = totalRevenus - totalDepenses;
+        double taux = (epargneNette / totalRevenus) * 100;
+
+        String appreciation;
+        if (taux < 0) {
+            appreciation = "⚠️ Attention : vous dépensez plus que vous ne gagnez ce mois-ci.";
+        } else if (taux < 10) {
+            appreciation = "📉 Épargne faible. Essayez de réduire vos dépenses non essentielles.";
+        } else if (taux < 20) {
+            appreciation = "📊 Correct, mais vous pouvez faire mieux.";
+        } else {
+            appreciation = "🌟 Excellent ! Au-dessus de 20%, vous êtes dans une excellente dynamique d'épargne.";
+        }
+
+        return new SavingsRateDTO(mois, annee, totalRevenus, totalDepenses, epargneNette,
+                String.format("%.2f%%", taux), appreciation);
+    }
 }

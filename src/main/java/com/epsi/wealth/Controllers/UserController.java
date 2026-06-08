@@ -75,4 +75,9 @@ public class UserController {
     public ResponseEntity<List<UserService.TopSpendingByCategory>> getTopSpendingByCategory(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
         return ResponseEntity.ok(userService.getTopSpendingByCategory(id, mois, annee));
     }
+
+    @GetMapping("/{id}/savings-rate")
+    public ResponseEntity<UserService.SavingsRateDTO> getSavingsRate(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        return ResponseEntity.ok(userService.getSavingsRate(id, mois, annee));
+    }
 }

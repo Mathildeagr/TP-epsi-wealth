@@ -135,6 +135,22 @@ INSERT INTO category (id, nom, plafond_mensuel, user_id) VALUES
 -- Solde total 23 500 €  →  surplus +3 100 €  →  MATELAS_OK
 -- -------------------------------------------------------------
 INSERT INTO transaction (libelle, montant, transaction_date, type, account_id, category_id) VALUES
+-- Jan 2024 — taux épargne < 0% (-12.5%) → ⚠️ Attention
+('Salaire janvier 2024',    3200, '2024-01-20', 'REVENU',  1, 1),
+('Loyer janvier 2024',       900, '2024-01-25', 'DEPENSE', 1, 2),
+('Réparation voiture',      2700, '2024-01-28', 'DEPENSE', 1, 5),
+-- Fév 2024 — taux épargne 0-10% (7.8%) → 📉 Épargne faible
+('Salaire février 2024',    3200, '2024-02-01', 'REVENU',  1, 1),
+('Loyer février 2024',       900, '2024-02-05', 'DEPENSE', 1, 2),
+('Courses février 2024',     450, '2024-02-10', 'DEPENSE', 1, 3),
+('Transport février 2024',   200, '2024-02-15', 'DEPENSE', 1, 4),
+('Vacances ski',            1400, '2024-02-20', 'DEPENSE', 1, 5),
+-- Mar 2024 — taux épargne 10-20% (14.1%) → 📊 Correct
+('Salaire mars 2024',       3200, '2024-03-01', 'REVENU',  1, 1),
+('Loyer mars 2024',          900, '2024-03-05', 'DEPENSE', 1, 2),
+('Courses mars 2024',        500, '2024-03-10', 'DEPENSE', 1, 3),
+('Transport mars 2024',      200, '2024-03-15', 'DEPENSE', 1, 4),
+('Équipement maison',       1150, '2024-03-20', 'DEPENSE', 1, 5),
 -- Avr 2025
 ('Salaire avril',         3200, '2025-04-01', 'REVENU',  1, 1),
 ('Loyer avril',            900, '2025-04-05', 'DEPENSE', 1, 2),
