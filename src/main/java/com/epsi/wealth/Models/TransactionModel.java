@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class TransactionModel {
     private LocalDate transactionDate;
 
     @NotNull(message = "Le type de transaction ne peut pas être nul")
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @ManyToOne(optional = false)

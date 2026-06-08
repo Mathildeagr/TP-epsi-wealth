@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
@@ -41,6 +43,7 @@ public class AccountModel {
     @DecimalMin(value = "0.0", inclusive = true, message = "Le taux d'intérêt doit être supérieur ou égal à 0")
     private Double tauxInteret;
 
+    @Enumerated(EnumType.STRING)
     private AccountType type;
 
     @JsonIgnore
