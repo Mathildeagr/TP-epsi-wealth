@@ -80,4 +80,9 @@ public class UserController {
     public ResponseEntity<UserService.SavingsRateDTO> getSavingsRate(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
         return ResponseEntity.ok(userService.getSavingsRate(id, mois, annee));
     }
+
+    @GetMapping("/{id}/bilan-comparatif")
+    public ResponseEntity<UserService.BilanComparatifDTO> getBilanComparatif(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        return ResponseEntity.ok(userService.getBilanComparatif(id, mois, annee));
+    }
 }

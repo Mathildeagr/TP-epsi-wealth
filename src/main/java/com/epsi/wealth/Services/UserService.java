@@ -207,4 +207,51 @@ public class UserService {
         return new SavingsRateDTO(mois, annee, totalRevenus, totalDepenses, epargneNette,
                 String.format("%.2f%%", taux), appreciation);
     }
+
+    public record MoisDTO(int mois, int annee, double totalRevenus, double totalDepenses) {}
+
+    public record BilanComparatifDTO(
+        MoisDTO moisCourant,
+        MoisDTO moisPrecedent,
+        String evolutionDepenses,
+        String evolutionRevenus,
+        String tendance
+    ) {}
+
+    public BilanComparatifDTO getBilanComparatif(Long userId, int mois, int annee) {
+        getUserById(userId);
+
+        int moisPrec = (mois == 1) ? 12 : mois - 1;
+        int anneePrec = (mois == 1) ? annee - 1 : annee;
+
+        double revenusCourant  = transactionRepository.sumParTypeMois(userId, TransactionType.REVENU,  mois, annee);
+        double depensesCourant = transactionRepository.sumParTypeMois(userId, TransactionType.DEPENSE, mois, annee);
+        double revenusPrec     = transactionRepository.sumParTypeMois(userId, TransactionType.REVENU,  moisPrec, anneePrec);
+        double depensesPrec    = transactionRepository.sumParTypeMois(userId, TransactionType.DEPENSE, moisPrec, anneePrec);
+
+        MoisDTO courant   = new MoisDTO(mois,     annee,     revenusCourant,  depensesCourant);
+        MoisDTO precedent = new MoisDTO(moisPrec, anneePrec, revenusPrec,     depensesPrec);
+
+        if (revenusPrec == 0 && depensesPrec == 0) {
+            return new BilanComparatifDTO(courant, precedent, null, null,
+                    "Pas de données pour le mois précédent.");
+        }
+
+        double evolDepenses = depensesPrec == 0 ? 0 : ((depensesCourant - depensesPrec) / depensesPrec) * 100;
+        double evolRevenus  = revenusPrec  == 0 ? 0 : ((revenusCourant  - revenusPrec)  / revenusPrec)  * 100;
+
+        String tendance;
+        if (evolDepenses < 0) {
+            tendance = "📉 Bonne nouvelle : vos dépenses ont baissé ce mois-ci.";
+        } else if (evolDepenses > 0) {
+            tendance = "📈 Attention : vos dépenses ont augmenté ce mois-ci.";
+        } else {
+            tendance = "➡️ Dépenses stables par rapport au mois précédent.";
+        }
+
+        return new BilanComparatifDTO(courant, precedent,
+                String.format("%.2f%%", evolDepenses),
+                String.format("%.2f%%", evolRevenus),
+                tendance);
+    }
 }
