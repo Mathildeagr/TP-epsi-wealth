@@ -2,6 +2,7 @@ package com.epsi.wealth.Services;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import com.epsi.wealth.Models.AccountModel;
 import com.epsi.wealth.Models.TransactionType;
 import com.epsi.wealth.Models.UserModel;
 import com.epsi.wealth.Repositories.AccountRepository;
+import com.epsi.wealth.Repositories.CategoryRepository;
 import com.epsi.wealth.Repositories.TransactionRepository;
 import com.epsi.wealth.Repositories.UserRepository;
 
@@ -21,12 +23,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
-    
+    private final CategoryRepository categoryRepository;
 
-    public UserService(UserRepository userRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) {
+    public UserService(UserRepository userRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     // Création d'un utilisateur avec validation de l'email et gestion des doublons
@@ -149,5 +152,21 @@ public class UserService {
             );
         }
         
+    }
+
+    public record TopSpendingByCategory(String category, double totalAmount, double limit, boolean isExceeded){}
+
+    public List<TopSpendingByCategory> getTopSpendingByCategory(Long userId, int mois, int annee) {
+       getUserById(userId);
+       List<Object[]> topSpendingByCategory = categoryRepository.findTopSpendingByCategory(userId, TransactionType.DEPENSE, mois, annee);
+       List<TopSpendingByCategory> topSpendingByCategoryList = new ArrayList<>();
+       for (Object[] row : topSpendingByCategory) {
+           String category = (String) row[0];
+           double totalAmount = row[1] != null ? ((Number) row[1]).doubleValue() : 0.0;
+           double limit = row[2] != null ? ((Number) row[2]).doubleValue() : 0.0;
+           boolean isExceeded = limit > 0 && totalAmount > limit;
+           topSpendingByCategoryList.add(new TopSpendingByCategory(category, totalAmount, limit, isExceeded));
+       }
+       return topSpendingByCategoryList;
     }
 }
