@@ -16,6 +16,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Data
 @NoArgsConstructor
@@ -42,6 +44,11 @@ public class UserModel {
     private String email;
 
     private LocalDate dateInscription = LocalDate.now();
+
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @ToString.Exclude
+    @Column(nullable = false)
+    private String password;
 
     @JsonIgnore
     @ToString.Exclude

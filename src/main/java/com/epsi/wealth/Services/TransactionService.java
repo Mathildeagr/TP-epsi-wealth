@@ -1,27 +1,34 @@
 package com.epsi.wealth.Services;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.epsi.wealth.Models.AccountModel;
+import com.epsi.wealth.Models.CategoryModel;
 import com.epsi.wealth.Models.TransactionModel;
 import com.epsi.wealth.Models.TransactionType;
 import com.epsi.wealth.Repositories.AccountRepository;
 import com.epsi.wealth.Repositories.CategoryRepository;
 import com.epsi.wealth.Repositories.TransactionRepository;
+import java.time.LocalDate;
 import java.util.List;
 import jakarta.transaction.Transactional;
 
 @Service
 public class TransactionService {
-    
-    @Autowired
-    private TransactionRepository transactionRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    public record CreateTransactionResult(TransactionModel transaction, String warning) {}
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
+    private final CategoryRepository categoryRepository;
+
+    public TransactionService(TransactionRepository transactionRepository,
+                              AccountRepository accountRepository,
+                              CategoryRepository categoryRepository) {
+        this.transactionRepository = transactionRepository;
+        this.accountRepository = accountRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<TransactionModel> getAll() {
         return transactionRepository.findAll();
@@ -53,11 +60,10 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionModel create(TransactionModel transaction, Long accountId, Long categoryId) {
+    public CreateTransactionResult create(TransactionModel transaction, Long accountId, Long categoryId) {
         AccountModel account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Compte introuvable"));
-
-        com.epsi.wealth.Models.CategoryModel category = categoryRepository.findById(categoryId)
+        CategoryModel category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Catégorie introuvable"));
 
         if (transaction.getType() == TransactionType.REVENU) {
@@ -68,7 +74,22 @@ public class TransactionService {
         accountRepository.save(account);
         transaction.setAccount(account);
         transaction.setCategory(category);
-        return transactionRepository.save(transaction);
+        TransactionModel saved = transactionRepository.save(transaction);
+
+        String warning = null;
+        if (saved.getType() == TransactionType.DEPENSE) {
+            LocalDate now = LocalDate.now();
+            Double somme = transactionRepository.sumDepensesMois(
+                saved.getCategory().getId(), TransactionType.DEPENSE, now.getMonthValue(), now.getYear());
+            Double plafond = saved.getCategory().getPlafondMensuel();
+            if (somme > plafond) {
+                warning = String.format(
+                    "Plafond dépassé pour la catégorie '%s'. Budget mensuel : %.2f€, Total après opération : %.2f€.",
+                    saved.getCategory().getNom(), plafond, somme);
+            }
+        }
+
+        return new CreateTransactionResult(saved, warning);
     }
 
 }
