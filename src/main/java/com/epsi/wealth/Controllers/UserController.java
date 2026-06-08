@@ -70,4 +70,9 @@ public class UserController {
     public ResponseEntity<Advisor> getAdvisor(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getAdvisor(id));
     }
+
+    @GetMapping("/{id}/categories/top-depenses")
+    public ResponseEntity<List<UserService.TopSpendingByCategory>> getTopSpendingByCategory(@PathVariable Long id, @RequestParam int mois, @RequestParam int annee) {
+        return ResponseEntity.ok(userService.getTopSpendingByCategory(id, mois, annee));
+    }
 }
